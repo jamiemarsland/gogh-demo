@@ -1,0 +1,54 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"meta": {
+		"title": "A page from nothing",
+		"description": "A blank WordPress with gogh, landing on the Paste HTML door: paste a page, make it freeform, roll the die.",
+		"author": "jamiemarsland",
+		"categories": [
+			"editor",
+			"design"
+		]
+	},
+	"landingPage": "/?gogh-edit=1&gogh-paste=1",
+	"preferredVersions": {
+		"php": "8.2",
+		"wp": "latest"
+	},
+	"features": {
+		"networking": true
+	},
+	"login": true,
+	"steps": [
+		{
+			"step": "installTheme",
+			"themeData": {
+				"resource": "wordpress.org/themes",
+				"slug": "twentytwentyfive"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "url",
+				"url": "https://raw.githubusercontent.com/jamiemarsland/gogh-demo/main/gogh-playground.zip"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php\nrequire '/wordpress/wp-load.php';\n// the living boot is fetched fresh (raw caches ~5 minutes); fall back to what this copy knows.\n$boot = false;\ntry {\n\t$boot = file_get_contents( 'https://raw.githubusercontent.com/jamiemarsland/gogh-demo/main/demo-boot-paste.php' );\n} catch ( \\Throwable $e ) {}\nif ( $boot && false !== strpos( $boot, 'gogh' ) ) {\n\teval( '?>' . $boot );\n} else {\n\twp_set_current_user( 1 );\n\t$id = wp_insert_post( array( 'post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'Start here', 'post_name' => 'start', 'post_content' => '' ) );\n\tif ( $id && ! is_wp_error( $id ) ) { update_post_meta( $id, '_wp_page_template', 'page-no-title' ); update_option( 'show_on_front', 'page' ); update_option( 'page_on_front', $id ); }\n}\n"
+		},
+		{
+			"step": "setSiteOptions",
+			"options": {
+				"blogname": "A page from nothing",
+				"blogdescription": "Paste it. Make it yours."
+			}
+		}
+	]
+}

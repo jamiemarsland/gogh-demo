@@ -1,0 +1,68 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"meta": {
+		"title": "Twenty-five Gogh experiments",
+		"description": "The Yellow House with a real shop — every experiment in the note, on a throwaway WordPress you can break.",
+		"author": "jamiemarsland",
+		"categories": [
+			"editor",
+			"design",
+			"ecommerce"
+		]
+	},
+	"landingPage": "/?gogh-edit=1",
+	"preferredVersions": {
+		"php": "8.2",
+		"wp": "latest"
+	},
+	"features": {
+		"networking": true
+	},
+	"login": true,
+	"steps": [
+		{
+			"step": "installTheme",
+			"themeData": {
+				"resource": "wordpress.org/themes",
+				"slug": "twentytwentyfive"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "woocommerce"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "url",
+				"url": "https://raw.githubusercontent.com/jamiemarsland/gogh-demo/main/gogh-playground.zip"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php\nrequire '/wordpress/wp-load.php';\n// blueprint.json is CDN-cached wherever it's linked — the living boot code is fetched fresh (raw caches ~5 minutes); fall back to what this copy knows.\n$boot = false;\ntry {\n\t$boot = file_get_contents( 'https://raw.githubusercontent.com/jamiemarsland/gogh-demo/main/demo-boot.php' );\n} catch ( \\Throwable $e ) {}\nif ( $boot && false !== strpos( $boot, 'gogh' ) ) {\n\teval( '?>' . $boot );\n} else {\n\twp_set_current_user( 1 );\n\ttry {\n\t\t$req = new WP_REST_Request( 'POST', '/gogh/v1/starter' );\n\t\t$req->set_param( 'slug', 'yellow-house' );\n\t\trest_do_request( $req );\n\t} catch ( \\Throwable $e ) {}\n}\n"
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php\nrequire '/wordpress/wp-load.php';\n// blueprint.json is CDN-cached wherever it's linked — the living boot code is fetched fresh (raw caches ~5 minutes); fall back to what this copy knows.\n$boot = false;\ntry {\n\t$boot = file_get_contents( 'https://raw.githubusercontent.com/jamiemarsland/gogh-demo/main/demo-boot-woo.php' );\n} catch ( \\Throwable $e ) {}\nif ( $boot && false !== strpos( $boot, 'gogh' ) ) {\n\teval( '?>' . $boot );\n} else {\n\tif ( class_exists( 'WC_Install' ) ) { wp_set_current_user( 1 ); try { WC_Install::create_pages(); } catch ( \\Throwable $e ) {} }\n}\n"
+		},
+		{
+			"step": "setSiteOptions",
+			"options": {
+				"blogname": "The Yellow House"
+			}
+		}
+	]
+}

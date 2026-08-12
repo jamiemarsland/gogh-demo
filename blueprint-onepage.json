@@ -1,0 +1,54 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"meta": {
+		"title": "Fenwick & Lowe — a one-page site",
+		"description": "An architecture practice on a single smooth-scrolling page: the menu is anchors, not pages, and every link glides to its section.",
+		"author": "jamiemarsland",
+		"categories": [
+			"editor",
+			"design"
+		]
+	},
+	"landingPage": "/?gogh-edit=1&gogh-build=1",
+	"preferredVersions": {
+		"php": "8.2",
+		"wp": "latest"
+	},
+	"features": {
+		"networking": true
+	},
+	"login": true,
+	"steps": [
+		{
+			"step": "installTheme",
+			"themeData": {
+				"resource": "wordpress.org/themes",
+				"slug": "twentytwentyfive"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "url",
+				"url": "https://raw.githubusercontent.com/jamiemarsland/gogh-demo/main/gogh-playground.zip"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php\nrequire '/wordpress/wp-load.php';\n// The definition rides INSIDE this blueprint, base64, and the boot calls\n// the plugin's own gogh_site_def_boot() straight from gogh.php: no second\n// fetch from PHP (Cloudflare's bot check refuses some server-side clients)\n// and no demo-boot.php, which the public zip leaves out on purpose.\n// One page, eight sections, a menu of anchors: the editor draws it all on\n// the first load (?gogh-build=1), then sends you to the finished site.\nwp_set_current_user( 1 );\ntry { wp_trash_post( 1 ); } catch ( \\Throwable $e ) {}\n$def = json_decode( base64_decode( 'eyJuYW1lIjoiRmVud2ljayAmIExvd2UiLCJ0YWdsaW5lIjoiQXJjaGl0ZWN0cyDCtyBCcmlzdG9sIiwidmFyaWF0aW9uIjoiVHdpbGlnaHQiLCJwYWxldHRlIjp7ImJhc2UiOiIjRUZFQ0U2IiwiY29udHJhc3QiOiIjMTkxODE3IiwiYWNjZW50cyI6WyIjQjQ1NzJGIiwiIzE5MTgxNyIsIiNEQ0Q1QzciLCIjNkU2NzVDIl19LCJjaHJvbWUiOnsiaGVhZGVyIjoiZ29naC1oZWFkZXItb25lcGFnZSIsImZvb3RlciI6ImdvZ2gtZm9vdGVyLXNpbXBsZSIsInN0aWNreSI6dHJ1ZX0sIm5hdiI6W3sibGFiZWwiOiJQcmFjdGljZSIsInVybCI6IiNwcmFjdGljZSJ9LHsibGFiZWwiOiJXb3JrIiwidXJsIjoiI3dvcmsifSx7ImxhYmVsIjoiV2hhdCB3ZSBkbyIsInVybCI6IiNzZXJ2aWNlcyJ9LHsibGFiZWwiOiJTdHVkaW8iLCJ1cmwiOiIjc3R1ZGlvIn0seyJsYWJlbCI6IkNvbnRhY3QiLCJ1cmwiOiIjY29udGFjdCJ9XSwicGFnZXMiOlt7InRpdGxlIjoiSG9tZSIsImZyb250Ijp0cnVlLCJzZWN0aW9ucyI6W3sidGFrZSI6IkNvdmVyIiwiYW5jaG9yIjoidG9wIiwiZXllYnJvdyI6IkZlbndpY2sgJiBMb3dlIMK3IEFyY2hpdGVjdHMgwrcgQnJpc3RvbCIsImhlYWRpbmciOiJCdWlsZGluZ3MgdGhhdCBrZWVwIHRoZWlyIG5lcnZlIiwidGV4dCI6IkhvdXNlcywgc2Nob29scyBhbmQgdGhlIGNhcmVmdWwgcmVwYWlyIG9mIG9sZCBidWlsZGluZ3MsIGFjcm9zcyB0aGUgd2VzdCBvZiBFbmdsYW5kIHNpbmNlIDE5ODQuIiwiYnV0dG9uIjoiU2VlIHRoZSB3b3JrIiwibGluayI6IiN3b3JrIiwiaW1hZ2UiOiIvd3AtY29udGVudC9wbHVnaW5zL2dvZ2gvc3RhcnRlcnMvcGhvdG9ncmFwaGVyL2J3LXRoZS12aWxsYS5qcGcifSx7InRha2UiOiJCaWcgc3RhdGVtZW50IiwiYW5jaG9yIjoicHJhY3RpY2UiLCJleWVicm93IjoiVGhlIHByYWN0aWNlIiwiaGVhZGluZyI6IldlIHdvdWxkIHJhdGhlciBtZW5kIHRoYW4gcmVwbGFjZSIsImJ1dHRvbiI6IldoYXQgd2UgZG8iLCJsaW5rIjoiI3NlcnZpY2VzIn0seyJ0YWtlIjoiTnVtYmVycyIsIml0ZW1zIjpbeyJ2YWx1ZSI6IjE5ODQiLCJsYWJlbCI6Ik9wZW5lZCBhYm92ZSBhIGNoZW1pc3Qgb24gUGFyayBTdHJlZXQifSx7InZhbHVlIjoiMzEiLCJsYWJlbCI6IkJ1aWxkaW5ncyBmaW5pc2hlZCwgbm9uZSBvZiB0aGVtIHRoZSBzYW1lIn0seyJ2YWx1ZSI6IjY4JSIsImxhYmVsIjoiT2Ygb3VyIHdvcmsgaXMgdG8gYnVpbGRpbmdzIHRoYXQgYWxyZWFkeSBzdGFuZCJ9XX0seyJ0YWtlIjoiR2FsbGVyeSIsImFuY2hvciI6IndvcmsiLCJleWVicm93IjoiU2VsZWN0ZWQgd29yayIsImhlYWRpbmciOiJUaGlydHktb25lIGJ1aWxkaW5ncywgYW5kIGNvdW50aW5nIiwiYnV0dG9uIjoiU3RhcnQgYSBwcm9qZWN0IiwibGluayI6IiNjb250YWN0IiwiaXRlbXMiOlt7ImltYWdlIjoiL3dwLWNvbnRlbnQvcGx1Z2lucy9nb2doL3N0YXJ0ZXJzL3Bob3RvZ3JhcGhlci9idy1jdXJ2ZXMuanBnIn0seyJpbWFnZSI6Ii93cC1jb250ZW50L3BsdWdpbnMvZ29naC9zdGFydGVycy9waG90b2dyYXBoZXIvYnctd2hpdGUtaG91c2UuanBnIn0seyJpbWFnZSI6Ii93cC1jb250ZW50L3BsdWdpbnMvZ29naC9zdGFydGVycy9waG90b2dyYXBoZXIvYnctY2lucXVlLXRlcnJlLmpwZyJ9XX0seyJ0YWtlIjoiRmVhdHVyZSBjYXJkcyIsImFuY2hvciI6InNlcnZpY2VzIiwiaGVhZGluZyI6IldoYXQgd2UgZG8iLCJtb29kIjoibGlmdCIsIml0ZW1zIjpbeyJ0aXRsZSI6IkhvdXNlcyIsInRleHQiOiJOZXcgaG91c2VzLCBhbmQgdGhlIGtpbmQgb2YgZXh0ZW5zaW9uIHRoYXQgbWFrZXMgdGhlIHJlc3Qgb2YgdGhlIGhvdXNlIG1ha2Ugc2Vuc2UgYXQgbGFzdC4ifSx7InRpdGxlIjoiUHVibGljIGJ1aWxkaW5ncyIsInRleHQiOiJTY2hvb2xzLCBsaWJyYXJpZXMgYW5kIHZpbGxhZ2UgaGFsbHMuIFNtYWxsIGJ1ZGdldHMsIGxvbmcgbGl2ZXMsIGFuZCBhIGdyZWF0IGRlYWwgb2YgbGlzdGVuaW5nLiJ9LHsidGl0bGUiOiJSZXRyb2ZpdCIsInRleHQiOiJJbnN1bGF0aW9uLCBhaXItdGlnaHRuZXNzIGFuZCBuZXcgdXNlcyBmb3Igb2xkIHdhbGxzLCB3aXRob3V0IHN0cmlwcGluZyB0aGUgY2hhcmFjdGVyIG91dCBvZiB0aGVtLiJ9XX0seyJ0YWtlIjoiUXVvdGUiLCJ0ZXh0IjoiVGhleSBzcGVudCBhIHdob2xlIG1vcm5pbmcgaW4gdGhlIGJ1aWxkaW5nIGJlZm9yZSB0aGV5IGRyZXcgYSBzaW5nbGUgbGluZS4gTm9ib2R5IGhhZCBkb25lIHRoYXQgYmVmb3JlLiIsIm5hbWUiOiJTYXJhaCBNdWxsYW4gwrcgSGVhZCB0ZWFjaGVyLCBBc2hjb3R0IFByaW1hcnkifSx7InRha2UiOiJUZWFtIiwiYW5jaG9yIjoic3R1ZGlvIiwiZXllYnJvdyI6IlRoZSBzdHVkaW8iLCJoZWFkaW5nIjoiVHdlbHZlIHBlb3BsZSwgb25lIHBsYW4gY2hlc3QiLCJpdGVtcyI6W3sibmFtZSI6IlJ1dGggRmVud2ljayIsInJvbGUiOiJGb3VuZGluZyBwYXJ0bmVyIiwiaW1hZ2UiOiIvd3AtY29udGVudC9wbHVnaW5zL2dvZ2gvc3RhcnRlcnMvcGhvdG9ncmFwaGVyL2J3LWxhdWdoaW5nLmpwZyJ9LHsibmFtZSI6IkFkZXllbWkgTG93ZSIsInJvbGUiOiJQYXJ0bmVyIiwiaW1hZ2UiOiIvd3AtY29udGVudC9wbHVnaW5zL2dvZ2gvc3RhcnRlcnMvcGhvdG9ncmFwaGVyL2J3LXBvcnRyYWl0LXN0dWRpby5qcGcifSx7Im5hbWUiOiJDYXJhIE5ldmluIiwicm9sZSI6IkFzc29jaWF0ZSwgcmV0cm9maXQiLCJpbWFnZSI6Ii93cC1jb250ZW50L3BsdWdpbnMvZ29naC9zdGFydGVycy9waG90b2dyYXBoZXIvYnctcG9ydHJhaXQtZHVzay5qcGcifV19LHsidGFrZSI6IkdldCBpbiB0b3VjaCIsImFuY2hvciI6ImNvbnRhY3QiLCJleWVicm93IjoiU2F5IGhlbGxvIiwiaGVhZGluZyI6IlRlbGwgdXMgYWJvdXQgdGhlIGJ1aWxkaW5nIiwidGV4dCI6IkEgc2tldGNoIG9uIHRoZSBiYWNrIG9mIGFuIGVudmVsb3BlIGlzIGEgZmluZSBwbGFjZSB0byBzdGFydC4gV2UgYW5zd2VyIGV2ZXJ5dGhpbmcgd2l0aGluIGEgZGF5IG9yIHR3by4ifV19XX0=' ), true );\nif ( is_array( $def ) && function_exists( 'gogh_site_def_boot' ) ) {\n\ttry { gogh_site_def_boot( $def ); } catch ( \\Throwable $e ) {}\n}"
+		},
+		{
+			"step": "setSiteOptions",
+			"options": {
+				"blogname": "Fenwick & Lowe",
+				"blogdescription": "Architects · Bristol"
+			}
+		}
+	]
+}
