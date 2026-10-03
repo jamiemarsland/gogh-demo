@@ -33,7 +33,7 @@
    "step": "installPlugin",
    "pluginData": {
     "resource": "url",
-    "url": "https://raw.githubusercontent.com/jamiemarsland/gogh-demo/main/gogh-html.zip?v=2"
+    "url": "https://raw.githubusercontent.com/jamiemarsland/gogh-demo/main/gogh-html.zip?v=3"
    },
    "options": {
     "activate": true
