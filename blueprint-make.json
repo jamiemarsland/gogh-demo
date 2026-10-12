@@ -1,0 +1,54 @@
+{
+ "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+ "meta": {
+  "title": "Make — chat, and gogh builds your site right here",
+  "description": "Not a design: a conversation. Say what your site is for and what it is called; gogh asks a question or two, finds pictures and builds real, editable pages in this WordPress, in front of you. Ask for changes and it rebuilds in place.",
+  "author": "jamiemarsland",
+  "categories": [
+   "editor",
+   "design"
+  ]
+ },
+ "landingPage": "/?gogh-make=1",
+ "preferredVersions": {
+  "php": "8.2",
+  "wp": "latest"
+ },
+ "features": {
+  "networking": true
+ },
+ "login": true,
+ "steps": [
+  {
+   "step": "installTheme",
+   "themeData": {
+    "resource": "wordpress.org/themes",
+    "slug": "twentytwentyfive"
+   },
+   "options": {
+    "activate": true
+   }
+  },
+  {
+   "step": "installPlugin",
+   "pluginData": {
+    "resource": "url",
+    "url": "https://raw.githubusercontent.com/jamiemarsland/gogh-demo/main/gogh-playground.zip"
+   },
+   "options": {
+    "activate": true
+   }
+  },
+  {
+   "step": "runPHP",
+   "code": "<?php\nrequire '/wordpress/wp-load.php';\nupdate_option( 'gogh_booted_as', 'make' );\nwp_set_current_user( 1 );\ntry { wp_trash_post( 1 ); wp_trash_post( 2 ); } catch ( \\Throwable $e ) {}\nupdate_option( 'blogname', 'My new site' );\nupdate_option( 'blogdescription', '' );\n"
+  },
+  {
+   "step": "setSiteOptions",
+   "options": {
+    "blogname": "My new site",
+    "blogdescription": ""
+   }
+  }
+ ]
+}
