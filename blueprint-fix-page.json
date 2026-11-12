@@ -1,0 +1,54 @@
+{
+ "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+ "meta": {
+  "title": "gogh — The broken first page (explore/fix-page branch)",
+  "description": "A brand-new person's first page arrives a little broken: drag the headline straight, say what you do, fix the clashing button, put a picture in. Built from the explore/fix-page branch, not a release.",
+  "author": "jamiemarsland",
+  "categories": [
+   "editor",
+   "design"
+  ]
+ },
+ "landingPage": "/?gogh-edit=1",
+ "preferredVersions": {
+  "php": "8.2",
+  "wp": "latest"
+ },
+ "features": {
+  "networking": true
+ },
+ "login": true,
+ "steps": [
+  {
+   "step": "installTheme",
+   "themeData": {
+    "resource": "wordpress.org/themes",
+    "slug": "twentytwentyfive"
+   },
+   "options": {
+    "activate": true
+   }
+  },
+  {
+   "step": "installPlugin",
+   "pluginData": {
+    "resource": "url",
+    "url": "https://raw.githubusercontent.com/jamiemarsland/gogh-demo/main/gogh-fix-page.zip?v=2"
+   },
+   "options": {
+    "activate": true
+   }
+  },
+  {
+   "step": "runPHP",
+   "code": "<?php\nrequire '/wordpress/wp-load.php';\nupdate_option( 'gogh_booted_as', 'fix-page' );\nwp_set_current_user( 1 );\ntry { wp_trash_post( 1 ); } catch ( \\Throwable $e ) {}\n// a brand-new person on a brand-new, empty page: the broken first page's stage\n$id = wp_insert_post( array( 'post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'Home', 'post_content' => '' ) );\nif ( $id && ! is_wp_error( $id ) ) {\n\tupdate_option( 'show_on_front', 'page' );\n\tupdate_option( 'page_on_front', (int) $id );\n}\ndelete_user_meta( 1, '_gogh_first_minute' );\n"
+  },
+  {
+   "step": "setSiteOptions",
+   "options": {
+    "blogname": "Your business",
+    "blogdescription": ""
+   }
+  }
+ ]
+}
